@@ -50,5 +50,10 @@ public class ProductController {
     public List<Product> getProductsByCategory(@RequestParam ("categoryName") String category) {
             return productService.getProductsByCategory(category);
     }
+
+    @GetMapping("/distinct-categories")
+    public List<String> getAllCategories(){
+        return  productService.getAllDistinctCategories();
+    }
     
 }
