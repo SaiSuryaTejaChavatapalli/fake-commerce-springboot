@@ -1,11 +1,13 @@
 package com.sst.FakeCommerce.services;
 
 import java.util.List;
-
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
-
 import com.sst.FakeCommerce.dtos.CreateProductRequestDto;
+import com.sst.FakeCommerce.dtos.GetProductResponseDto;
+import com.sst.FakeCommerce.dtos.GetProductWithDetailsResponseDto;
 import com.sst.FakeCommerce.repositories.ProductRepository;
+import com.sst.FakeCommerce.schemas.Category;
 import com.sst.FakeCommerce.schemas.Product;
 
 import lombok.RequiredArgsConstructor;
@@ -15,24 +17,43 @@ import lombok.RequiredArgsConstructor;
 public class ProductService {
     private final ProductRepository productRepository;
 
-    public List<Product> getAllProducts(){
-        return productRepository.findAll();
+    private final CategoryService categoryService;
+
+    public List<GetProductResponseDto> getAllProducts(){
+        List<Product> products= productRepository.findAll();
+        
+       return products.stream().map(product -> GetProductResponseDto.builder()
+                .id(product.getId())
+                .title(product.getTitle())
+                .description(product.getDescription())
+                .image(product.getImage())
+                .rating(product.getRating())
+                .build())
+                .collect(Collectors.toList());
     }
 
-    public Product getProductById(Long id){
-        return  productRepository.findById(id)
-        .orElseThrow(()-> new RuntimeException("Product not found"));
+    public GetProductResponseDto getProductById(Long id){
+        return productRepository.findById(id).map(product -> GetProductResponseDto.builder()
+                .id(product.getId())
+                .title(product.getTitle())
+                .description(product.getDescription())
+                .image(product.getImage())
+                .rating(product.getRating())
+                .build() )
+                .orElseThrow(()-> new RuntimeException("Product not found"));
     }
 
 
     public Product creaProduct(CreateProductRequestDto requestDto){
+
+        Category category = categoryService.getCategoryById(requestDto.getCategoryId());
 
         Product newProduct = Product.builder()
         .title(requestDto.getTitle())
         .description(requestDto.getDescription())
         .image(requestDto.getImage())
         .price(requestDto.getPrice())
-        .category(requestDto.getCategory())
+        .category(category) 
         .rating(requestDto.getRating())
         .build();
         
@@ -40,7 +61,7 @@ public class ProductService {
     }
 
 
-    public  void deleteProduct(Long id){
+    public void deleteProduct(Long id){
         productRepository.deleteById(id);
     }
 
@@ -52,6 +73,23 @@ public class ProductService {
 
     public List<String> getAllDistinctCategories(){
         return  productRepository.findAllDistinctCategories();
+    }
+
+    public GetProductWithDetailsResponseDto getProductWithDetailsById(Long id) {
+
+        Product product = productRepository.findProductWithDetailsById(id).get(0);
+
+
+        return GetProductWithDetailsResponseDto
+            .builder()
+            .id(product.getId())
+            .title(product.getTitle())
+            .description(product.getDescription())
+            .price(product.getPrice())
+            .category(product.getCategory().getName())
+            .image(product.getImage())
+            .rating(product.getRating())
+            .build(); 
     }
 
 
