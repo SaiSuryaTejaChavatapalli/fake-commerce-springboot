@@ -2,6 +2,9 @@ package com.sst.FakeCommerce.schemas;
 
 import java.util.List;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
 import com.sst.FakeCommerce.enums.OrderStatus;
 
 import jakarta.persistence.Entity;
@@ -20,6 +23,8 @@ import lombok.NoArgsConstructor;
 @Builder 
 @Entity 
 @Table (name = "orders")
+@SQLDelete (sql = "UPDATE orders SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLRestriction ("deleted_at IS NULL")
 public class Order extends BaseEntity {
 
     private OrderStatus status;
