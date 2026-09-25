@@ -16,37 +16,31 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data 
 @AllArgsConstructor 
 @NoArgsConstructor 
 @Builder 
 @Entity 
-@Table(name = "products")
-@SQLDelete (sql = "UPDATE products SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
+@Table(name = "reviews")
+@SQLDelete (sql = "UPDATE reviews SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 @SQLRestriction ("deleted_at IS NULL")
-public class Product extends BaseEntity {
+public class Review extends BaseEntity {
+
     
-    @Column(nullable = false)
-    private String title;
+    private  String title;
 
     @Column (columnDefinition = "TEXT")
     private String description;
 
     @Column (nullable = false)
-    private BigDecimal price;
-
-    private String image;
-
-    // ManyToOne can be read as Many Products can have one category
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
-    private  Category category;
-
-    @Column(name = "rating", precision = 3, scale = 1, nullable = false)
     private  BigDecimal rating;
 
-    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable=false)
+    private Product product;
 
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable=false)
+    private Order order;
 }

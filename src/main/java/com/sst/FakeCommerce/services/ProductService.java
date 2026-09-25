@@ -88,7 +88,7 @@ public class ProductService {
             .price(product.getPrice())
             .category(product.getCategory().getName())
             .image(product.getImage())
-            .rating(product.getRating())
+            // .rating(product.getRating())
             .build(); 
     }
 

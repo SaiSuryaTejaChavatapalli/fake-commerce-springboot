@@ -3,10 +3,10 @@ package com.sst.FakeCommerce.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.sst.FakeCommerce.schemas.Order;
+import com.sst.FakeCommerce.schemas.Review;
 
 
 @Repository 
-public interface OrderRepository extends JpaRepository<Order,Long> {
+public interface ReviewRepository extends  JpaRepository<Review,Long>{
     
 }
