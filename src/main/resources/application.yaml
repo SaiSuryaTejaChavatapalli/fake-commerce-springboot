@@ -9,8 +9,14 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     properties:
       hibernate:
         format_sql: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  # Flyway Configuration
+  flyway:
+    enabled: true
+    # Default location (optional to declare, but good for reference)
+    locations: classpath:db/migration

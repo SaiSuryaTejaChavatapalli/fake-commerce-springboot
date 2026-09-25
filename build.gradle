@@ -30,6 +30,16 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testAnnotationProcessor 'org.projectlombok:lombok'
+
+	 // Old Flyway Core and PostgreSQL Extension (Don't use)
+    // implementation 'org.flywaydb:flyway-core'
+    // implementation 'org.flywaydb:flyway-database-postgresql'
+
+	 // Spring Boot Flyway Starter (Manages the baseline Flyway core dependencies)
+    implementation 'org.springframework.boot:spring-boot-starter-flyway'
+    
+    // Flyway PostgreSQL Extension (Required for modern Flyway versions)
+    implementation 'org.flywaydb:flyway-database-postgresql'
 }
 
 tasks.named('test') {
