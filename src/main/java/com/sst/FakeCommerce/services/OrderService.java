@@ -1,9 +1,14 @@
 package com.sst.FakeCommerce.services;
 
 import com.sst.FakeCommerce.repositories.ProductRepository;
+
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
+import com.sst.FakeCommerce.adapters.OrderAdapter;
 import com.sst.FakeCommerce.dtos.CreateOrderRequestDto;
+import com.sst.FakeCommerce.dtos.GetOrderResponseDto;
 import com.sst.FakeCommerce.enums.OrderStatus;
 import com.sst.FakeCommerce.exceptions.ResourceNotFoundException;
 import com.sst.FakeCommerce.repositories.OrderProductsRepository;
@@ -24,6 +29,8 @@ public class OrderService {
     private final OrderRepository orderRepository;
 
     private final OrderProductsRepository orderProductsRepository;
+
+    private final OrderAdapter orderAdapter;
 
     
 
@@ -50,5 +57,12 @@ public class OrderService {
         
         return  order;
         
+    }
+
+    public  List<GetOrderResponseDto> getAllOrders(){
+
+        List<Order> orders= orderRepository.findAll();
+        
+        return orderAdapter.mapToGetOrderResponseDtoList(orders);
     }
 }
