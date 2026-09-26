@@ -65,4 +65,18 @@ public class OrderService {
         
         return orderAdapter.mapToGetOrderResponseDtoList(orders);
     }
+
+    public  GetOrderResponseDto getOrderById(Long id){
+        Order order = orderRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Order with ID "+id+" not found"));
+
+        return  orderAdapter.mapToGetOrderResponseDto(order);
+
+    }
+
+    
+    public void deleteOrder(Long id){
+       Order order= orderRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Order with ID "+id+" not found"));
+       orderRepository.delete(order);
+    }
 }
