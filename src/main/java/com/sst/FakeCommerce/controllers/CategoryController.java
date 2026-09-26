@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sst.FakeCommerce.dtos.CreateCategoryRequestDto;
 import com.sst.FakeCommerce.schemas.Category;
 import com.sst.FakeCommerce.services.CategoryService;
+import com.sst.FakeCommerce.utils.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,11 +32,11 @@ public class CategoryController {
     
 
     @PostMapping
-    public ResponseEntity<Category> creaCategory(@RequestBody CreateCategoryRequestDto createCategoryRequestDto) { 
+    public ResponseEntity<ApiResponse<Category>> creaCategory(@RequestBody CreateCategoryRequestDto createCategoryRequestDto) { 
        Category category= categoryService.createCategory(createCategoryRequestDto);
        return  ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(category);
+                .body(ApiResponse.success(category, "Category created successfully"));
     }
 
     @GetMapping
