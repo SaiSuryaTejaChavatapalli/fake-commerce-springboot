@@ -66,14 +66,12 @@ public class ProductService {
     }
 
 
-    public List<Product> getProductsByCategory(String category){
-       return productRepository.findByCategory(category);
+    public List<Product> getProductsByCategory(String categoryName){
+       return productRepository.findByCategory_Name(categoryName);
     }
 
 
-    public List<String> getAllDistinctCategories(){
-        return  productRepository.findAllDistinctCategories();
-    }
+  
 
     public GetProductWithDetailsResponseDto getProductWithDetailsById(Long id) {
 

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sst.FakeCommerce.dtos.CreateReviewRequestDto;
 import com.sst.FakeCommerce.schemas.Review;
 import com.sst.FakeCommerce.services.ReviewService;
+import com.sst.FakeCommerce.utils.ApiResponse;
 
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -30,17 +31,17 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping
-    public ResponseEntity<Review>  createReview(@RequestBody CreateReviewRequestDto reviewRequestDto){
+    public ResponseEntity<ApiResponse<Review>>  createReview(@RequestBody CreateReviewRequestDto reviewRequestDto){
 
       Review review= reviewService.createReview(reviewRequestDto);
-      return  ResponseEntity.status(HttpStatus.CREATED).body(review);
+      return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(review, " Review created successfully"));
     }
 
 
     @GetMapping
-    public ResponseEntity<List<Review>> getAllReviews(){
+    public ResponseEntity<ApiResponse<List<Review>>> getAllReviews(){
       List<Review> reviews= reviewService.getAllReviews();
-      return ResponseEntity.ok(reviews);
+      return ResponseEntity.ok(ApiResponse.success(reviews, "Reviews fetched successfully"));
     }
 
     

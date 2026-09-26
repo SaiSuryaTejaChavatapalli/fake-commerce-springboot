@@ -13,11 +13,12 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Long>{
 
 
-    List<Product> findByCategory(String category);
+        // Same functionality with JPQL query
+    //  @Query("SELECT p FROM Product p JOIN p.category c WHERE c.name = :categoryName")
+    // List<Product> findProductsByCategoryName(@Param("categoryName") String categoryName);
+    
+     List<Product> findByCategory_Name( @Param("categoryName") String categoryName);
 
-
-    @Query (nativeQuery = true, value = "SELECT DISTINCT category from products")
-    List<String> findAllDistinctCategories();
 
     // @Query (nativeQuery = true,
     //      value = "SELECT p.*, c.name as category  FROM products p INNER JOIN categories c on p.category_id = c.id WHERE p.id = :id")

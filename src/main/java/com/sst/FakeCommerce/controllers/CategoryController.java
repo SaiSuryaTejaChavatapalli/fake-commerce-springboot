@@ -40,18 +40,24 @@ public class CategoryController {
     }
 
     @GetMapping
-    public  List<Category> getAllCategories(){
-        return categoryService.getAllCategories();
+    public  ResponseEntity<ApiResponse<List<Category>>> getAllCategories(){
+       List<Category> categories= categoryService.getAllCategories();
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(categories, "Categories fetched successfully"));
     }
 
     @GetMapping("/{id}")
-    public Category getCategoryById(@PathVariable("id") Long id) {
-        return categoryService.getCategoryById(id);
+    public ResponseEntity<ApiResponse<Category>> getCategoryById(@PathVariable("id") Long id) {
+        Category category = categoryService.getCategoryById(id);
+        return ResponseEntity.ok(ApiResponse.success(category, "Categories fetched successfully"));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCategoryById(@PathVariable("id") Long id){
+    public ResponseEntity<ApiResponse<Void>> deleteCategoryById(@PathVariable("id") Long id){
         categoryService.deleteCategoryById(id);
+        return  ResponseEntity.ok(ApiResponse.success(null,"Category deleted successfully"));
+        
     }
+    
+
     
 }

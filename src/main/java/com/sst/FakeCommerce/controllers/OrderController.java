@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sst.FakeCommerce.dtos.CreateOrderRequestDto;
 import com.sst.FakeCommerce.schemas.Order;
 import com.sst.FakeCommerce.services.OrderService;
+import com.sst.FakeCommerce.utils.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,10 +24,9 @@ public class OrderController {
     private final OrderService orderService;
     
     @PostMapping
-    public ResponseEntity<Order>  createOrder(@RequestBody CreateOrderRequestDto orderRequestDto) {
+    public ResponseEntity<ApiResponse<Order>>  createOrder(@RequestBody CreateOrderRequestDto orderRequestDto) {
         Order order= orderService.createOrder(orderRequestDto);
-        return  ResponseEntity.status(HttpStatus.CREATED).body(order);
+        return  ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(order,"Order created successfully"));
     }
-    
     
 }
