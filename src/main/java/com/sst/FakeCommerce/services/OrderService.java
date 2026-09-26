@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.sst.FakeCommerce.dtos.CreateOrderRequestDto;
 import com.sst.FakeCommerce.enums.OrderStatus;
+import com.sst.FakeCommerce.exceptions.ResourceNotFoundException;
 import com.sst.FakeCommerce.repositories.OrderProductsRepository;
 import com.sst.FakeCommerce.repositories.OrderRepository;
 import com.sst.FakeCommerce.schemas.Order;
@@ -37,7 +38,7 @@ public class OrderService {
         .map(item -> {
             Product product= productRepository
                 .findById(item.getProductId())
-                .orElseThrow(()-> new RuntimeException("Product not found"));
+                .orElseThrow(()-> new ResourceNotFoundException("Product not found"));
 
             return  OrderProducts.builder()
             .order(order)
