@@ -11,6 +11,8 @@ import com.sst.FakeCommerce.services.CategoryService;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,8 +31,11 @@ public class CategoryController {
     
 
     @PostMapping
-    public Category postMethodName(@RequestBody CreateCategoryRequestDto createCategoryRequestDto) { 
-        return categoryService.createCategory(createCategoryRequestDto);
+    public ResponseEntity<Category> creaCategory(@RequestBody CreateCategoryRequestDto createCategoryRequestDto) { 
+       Category category= categoryService.createCategory(createCategoryRequestDto);
+       return  ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(category);
     }
 
     @GetMapping
