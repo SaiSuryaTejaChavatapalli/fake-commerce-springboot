@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sst.FakeCommerce.dtos.CreateOrderRequestDto;
 import com.sst.FakeCommerce.dtos.GetOrderResponseDto;
-import com.sst.FakeCommerce.schemas.Order;
+import com.sst.FakeCommerce.dtos.UpdateOrderRequestDto;
 import com.sst.FakeCommerce.services.OrderService;
 import com.sst.FakeCommerce.utils.ApiResponse;
 
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 
@@ -32,11 +33,17 @@ public class OrderController {
     private final OrderService orderService;
     
     @PostMapping
-    public ResponseEntity<ApiResponse<Order>>  createOrder(@RequestBody CreateOrderRequestDto orderRequestDto) {
-        Order order= orderService.createOrder(orderRequestDto);
+    public ResponseEntity<ApiResponse<GetOrderResponseDto>>  createOrder(@RequestBody CreateOrderRequestDto orderRequestDto) {
+        GetOrderResponseDto order= orderService.createOrder(orderRequestDto);
         return  ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(order,"Order created successfully"));
     }
 
+
+    @PatchMapping("/{id}")
+    public  ResponseEntity<ApiResponse<GetOrderResponseDto>>  updateOrder(@PathVariable("id") Long id, @RequestBody  UpdateOrderRequestDto updateOrderRequestDto){
+        GetOrderResponseDto order= orderService.updateOrder(id, updateOrderRequestDto);
+        return  ResponseEntity.ok(ApiResponse.success(order, "Order with ID: "+id+" updated sucessfullyt"));
+    }
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<GetOrderResponseDto>>> getAllOrders() {
