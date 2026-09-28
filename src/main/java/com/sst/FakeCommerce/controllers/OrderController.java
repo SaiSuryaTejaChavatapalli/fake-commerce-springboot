@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sst.FakeCommerce.dtos.CreateOrderRequestDto;
 import com.sst.FakeCommerce.dtos.GetOrderResponseDto;
+import com.sst.FakeCommerce.dtos.GetOrderSummaryResponseDto;
 import com.sst.FakeCommerce.dtos.UpdateOrderRequestDto;
 import com.sst.FakeCommerce.services.OrderService;
 import com.sst.FakeCommerce.utils.ApiResponse;
@@ -31,29 +32,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class OrderController {
 
     private final OrderService orderService;
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<GetOrderResponseDto>>> getAllOrders() {
+        return ResponseEntity.ok(ApiResponse.success(orderService.getAllOrders(), "Orders fetched successfully"));
+    }
     
     @PostMapping
     public ResponseEntity<ApiResponse<GetOrderResponseDto>>  createOrder(@RequestBody CreateOrderRequestDto orderRequestDto) {
         GetOrderResponseDto order= orderService.createOrder(orderRequestDto);
-        return  ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(order,"Order created successfully"));
-    }
-
-
-    @PatchMapping("/{id}")
-    public  ResponseEntity<ApiResponse<GetOrderResponseDto>>  updateOrder(@PathVariable("id") Long id, @RequestBody  UpdateOrderRequestDto updateOrderRequestDto){
-        GetOrderResponseDto order= orderService.updateOrder(id, updateOrderRequestDto);
-        return  ResponseEntity.ok(ApiResponse.success(order, "Order with ID: "+id+" updated sucessfullyt"));
-    }
-
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<GetOrderResponseDto>>> getAllOrders() {
-        
-        return ResponseEntity.ok(ApiResponse.success(orderService.getAllOrders(), "Orders fetched successfully"));
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<GetOrderResponseDto>> getOrderById(@PathVariable("id") Long id ) {
-        return ResponseEntity.ok(ApiResponse.success(orderService.getOrderById(id), "Order with id "+id+" fetched successfully"));
+        return  ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(ApiResponse.success(order,"Order created successfully"));
     }
 
     @DeleteMapping ("/{id}")
@@ -62,7 +52,26 @@ public class OrderController {
         return ResponseEntity.ok(ApiResponse.success(null, "Order with id "+id+" deleted successfully"));
         
     }
-    
-    
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<GetOrderResponseDto>> getOrderById(@PathVariable("id") Long id ) {
+        return ResponseEntity.ok(ApiResponse.success(orderService.getOrderById(id), "Order with id "+id+" fetched successfully"));
+    }
+
+    @PatchMapping("/{id}")
+    public  ResponseEntity<ApiResponse<GetOrderResponseDto>>  updateOrder(@PathVariable("id") Long id, @RequestBody  UpdateOrderRequestDto updateOrderRequestDto){
+        GetOrderResponseDto order= orderService.updateOrder(id, updateOrderRequestDto);
+        return  ResponseEntity.ok(ApiResponse.success(order, "Order with ID: "+id+" updated sucessfullyt"));
+    }
+
+ 
+
+    @GetMapping("/{id}/summary")
+   public ResponseEntity<ApiResponse<GetOrderSummaryResponseDto>> getOrderSummary(@PathVariable("id") Long id ){
+
+        GetOrderSummaryResponseDto orderSummary= orderService.getOrderSummary(id);
+        
+        return ResponseEntity.ok(ApiResponse.success(orderSummary, "Order summary fetch successfully with ID: "+ id));
+   }  
     
 }

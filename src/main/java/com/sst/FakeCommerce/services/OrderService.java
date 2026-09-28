@@ -2,6 +2,7 @@ package com.sst.FakeCommerce.services;
 
 import com.sst.FakeCommerce.repositories.ProductRepository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,9 @@ import org.springframework.stereotype.Service;
 import com.sst.FakeCommerce.adapters.OrderAdapter;
 import com.sst.FakeCommerce.dtos.CreateOrderRequestDto;
 import com.sst.FakeCommerce.dtos.GetOrderResponseDto;
+import com.sst.FakeCommerce.dtos.GetOrderSummaryResponseDto;
 import com.sst.FakeCommerce.dtos.OrderItemActionDto;
+import com.sst.FakeCommerce.dtos.OrderItemResponseDto;
 import com.sst.FakeCommerce.dtos.UpdateOrderRequestDto;
 import com.sst.FakeCommerce.enums.OrderStatus;
 import com.sst.FakeCommerce.exceptions.ResourceNotFoundException;
@@ -226,4 +229,30 @@ public class OrderService {
        Order order= orderRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Order with ID "+id+" not found"));
        orderRepository.delete(order);
     }
+
+
+    public GetOrderSummaryResponseDto getOrderSummary(Long id){
+            Order order = orderRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Order not found witn ID: "+ id));
+
+            List<OrderProducts> orderProducts = orderProductsRepository.findByOrderWithProduct(order);
+
+            List<OrderItemResponseDto> items= orderAdapter.mapToOrderItemResponseDto(orderProducts);
+
+            int totalItems = orderProducts.stream().mapToInt(OrderProducts:: getQuantity).sum();
+
+            BigDecimal totalPrice = orderProducts.stream()
+                                    .map(op -> op.getProduct().getPrice().multiply(BigDecimal.valueOf(op.getQuantity())))
+                                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+                                    
+            return  GetOrderSummaryResponseDto.builder()
+                    .id(order.getId())
+                    .status(order.getStatus())
+                    .items(items)
+                    .totalItems(totalItems)
+                    .totalPrice(totalPrice)
+                    .createdAt(order.getCreatedAt())
+                    .updatedAt(order.getUpdatedAt())
+                    .build();
+    }
+
 }
