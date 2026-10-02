@@ -38,3 +38,8 @@ out/
 
 
 .env
+
+
+# Ignore local log directories
+# /logs/
+# *.log

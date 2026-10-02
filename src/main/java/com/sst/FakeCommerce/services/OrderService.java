@@ -28,7 +28,9 @@ import com.sst.FakeCommerce.schemas.Product;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j 
 @Service 
 @RequiredArgsConstructor 
 public class OrderService {
@@ -45,7 +47,7 @@ public class OrderService {
 
     @Transactional 
     public GetOrderResponseDto  createOrder(CreateOrderRequestDto createOrderRequestDto){
-
+        log.info("Create Order Called with {}", createOrderRequestDto);
         Order order = Order.builder().status(OrderStatus.PENDING).build();
         orderRepository.save(order);
         // Bad approcah : Causing N+1 Problem
@@ -104,6 +106,7 @@ public class OrderService {
 
     @Transactional 
     public GetOrderResponseDto updateOrder(Long id, UpdateOrderRequestDto updateOrderRequestDto){
+            log.info("Update Order Called with {}", updateOrderRequestDto);
             Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: "+id));
 
@@ -210,13 +213,14 @@ public class OrderService {
 
 
     public  List<GetOrderResponseDto> getAllOrders(){
-
+        log.info("getAllOrders called");
         List<Order> orders= orderRepository.findAll();
         
         return orderAdapter.mapToGetOrderResponseDtoList(orders);
     }
 
     public  GetOrderResponseDto getOrderById(Long id){
+        log.info("get Order by ID called  with {}", id);
         Order order = orderRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException("Order with ID "+id+" not found"));
 
@@ -226,12 +230,14 @@ public class OrderService {
 
     
     public void deleteOrder(Long id){
+        log.info("Delete Order by ID called  with {}", id);
        Order order= orderRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Order with ID "+id+" not found"));
        orderRepository.delete(order);
     }
 
 
     public GetOrderSummaryResponseDto getOrderSummary(Long id){
+        log.info("get Order Summary by ID called  with {}", id);
             Order order = orderRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Order not found witn ID: "+ id));
 
             List<OrderProducts> orderProducts = orderProductsRepository.findByOrderWithProduct(order);

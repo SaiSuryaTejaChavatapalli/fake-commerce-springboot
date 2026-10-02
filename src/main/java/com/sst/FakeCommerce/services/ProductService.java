@@ -11,7 +11,9 @@ import com.sst.FakeCommerce.schemas.Category;
 import com.sst.FakeCommerce.schemas.Product;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j 
 @Service 
 @RequiredArgsConstructor 
 public class ProductService {
@@ -21,7 +23,7 @@ public class ProductService {
 
     public List<GetProductResponseDto> getAllProducts(){
         List<Product> products= productRepository.findAll();
-        
+         log.info("getAllProducts called");
        return products.stream().map(product -> GetProductResponseDto.builder()
                 .id(product.getId())
                 .title(product.getTitle())
@@ -33,6 +35,7 @@ public class ProductService {
     }
 
     public GetProductResponseDto getProductById(Long id){
+        log.info("getProductById called with {}", id);
         return productRepository.findById(id).map(product -> GetProductResponseDto.builder()
                 .id(product.getId())
                 .title(product.getTitle())
@@ -45,7 +48,7 @@ public class ProductService {
 
 
     public Product creaProduct(CreateProductRequestDto requestDto){
-
+        log.info("Create Product called with {}", requestDto);
         Category category = categoryService.getCategoryById(requestDto.getCategoryId());
 
         Product newProduct = Product.builder()
@@ -62,11 +65,13 @@ public class ProductService {
 
 
     public void deleteProduct(Long id){
+        log.info("Create Product called with{}", id);
         productRepository.deleteById(id);
     }
 
 
     public List<Product> getProductsByCategory(String categoryName){
+        log.info("Create Product by category called with {}", categoryName);
        return productRepository.findByCategory_Name(categoryName);
     }
 
@@ -74,7 +79,7 @@ public class ProductService {
   
 
     public GetProductWithDetailsResponseDto getProductWithDetailsById(Long id) {
-
+        log.info("Get Product with details called with{}", id);
         Product product = productRepository.findProductWithDetailsById(id).get(0);
 
 

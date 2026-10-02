@@ -20,3 +20,7 @@ spring:
     enabled: true
     # Default location (optional to declare, but good for reference)
     locations: classpath:db/migration
+
+logging:
+  file:
+    name: logs/fakecommerce-app-logs.log
