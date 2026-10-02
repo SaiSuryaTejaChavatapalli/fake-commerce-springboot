@@ -43,3 +43,4 @@ out/
 # Ignore local log directories
 /logs/
 *.log
+
