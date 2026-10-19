@@ -40,6 +40,9 @@ dependencies {
     
     // Flyway PostgreSQL Extension (Required for modern Flyway versions)
     implementation 'org.flywaydb:flyway-database-postgresql'
+
+	// Core Spring Data Redis starter (includes Lettuce client by default)
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 tasks.named('test') {

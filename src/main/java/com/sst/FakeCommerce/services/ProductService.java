@@ -1,6 +1,7 @@
 package com.sst.FakeCommerce.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import com.sst.FakeCommerce.dtos.CreateProductRequestDto;
@@ -9,6 +10,7 @@ import com.sst.FakeCommerce.dtos.GetProductWithDetailsResponseDto;
 import com.sst.FakeCommerce.repositories.ProductRepository;
 import com.sst.FakeCommerce.schemas.Category;
 import com.sst.FakeCommerce.schemas.Product;
+import com.sst.FakeCommerce.services.cache.ProductRedisCache;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,9 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     private final CategoryService categoryService;
+
+    private final ProductRedisCache productRedisCache;
+
 
     public List<GetProductResponseDto> getAllProducts(){
         List<Product> products= productRepository.findAll();
@@ -35,8 +40,15 @@ public class ProductService {
     }
 
     public GetProductResponseDto getProductById(Long id){
+
+        Optional<GetProductResponseDto> cachedSummary = productRedisCache.getSummary(id);
+        if(cachedSummary.isPresent()){
+            return cachedSummary.get();
+        }
+
+
         log.info("getProductById called with {}", id);
-        return productRepository.findById(id).map(product -> GetProductResponseDto.builder()
+        GetProductResponseDto response = productRepository.findById(id).map(product -> GetProductResponseDto.builder()
                 .id(product.getId())
                 .title(product.getTitle())
                 .description(product.getDescription())
@@ -44,6 +56,10 @@ public class ProductService {
                 .rating(product.getRating())
                 .build() )
                 .orElseThrow(()-> new RuntimeException("Product not found"));
+
+        productRedisCache.putSummary(id, response);
+
+        return response;
     }
 
 
